@@ -19,12 +19,29 @@ def emotion_detector(text_to_analyse):
     formatted_response = json.loads(response.text)
 
     # Extracting required set of emotions from the response
-    anger_score = formatted_response['emotionPredictions']['emotion']['anger']
-    disgust = formatted_response['emotionPredictions']['disgust']
-    fear = formatted_response['emotionPredictions']['fear']
-    joy = formatted_response['emotionPredictions']['joy']
-    sadness = formatted_response['emotionPredictions']['sadness']
-    
+    emotions = formatted_response['emotionPredictions'][0]['emotion']
+    anger_score = emotions['anger']
+    disgust_score = emotions['disgust']
+    fear_score = emotions['fear']
+    joy_score = emotions['joy']
+    sadness_score = emotions['sadness']
 
-    # Return the response text from the API
-    return response.text
+    # Finding the dominant emotion
+    emotion_scores = {
+        'anger': anger_score,
+        'disgust': disgust_score,
+        'fear': fear_score,
+        'joy': joy_score,
+        'sadness': sadness_score
+    }
+    dominant_emotion = max(emotion_scores, key=emotion_scores.get)
+
+    # Return the response in the required format
+    return {
+        'anger': anger_score,
+        'disgust': disgust_score,
+        'fear': fear_score,
+        'joy': joy_score,
+        'sadness': sadness_score,
+        'dominant_emotion': dominant_emotion
+    }
