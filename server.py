@@ -1,3 +1,4 @@
+"""this model process GET request for emotion detection."""
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -5,12 +6,17 @@ app = Flask("Emotion Detector")
 
 @app.route("/emotionDetector")
 def detect_emotion():
+    """process GET request."""
     # Retrieve the text to analyze from the request arguments
     text_to_analyze = request.args.get('textToAnalyze')
-    
+
     # Pass the text to the emotion_detector function and store the response
     emotion_response = emotion_detector(text_to_analyze)
-    
+
+    # Check if the dominant emotion is None
+    if emotion_response['dominant_emotion'] is None:
+        return "Invalid text! Please try again!"
+
     # Format the output
     formatted_output = (
         f"For the given statement, the system response is "
@@ -25,6 +31,7 @@ def detect_emotion():
 
 @app.route("/")
 def render_index_page():
+    """Function render index page."""
     return render_template('index.html')
 
 if __name__ == "__main__":
